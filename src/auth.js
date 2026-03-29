@@ -55,6 +55,24 @@ router.get('/register', (req, res) => {
 });
 
 // POST /oauth/register - handle signup
+// Dynamic Client Registration (DCR) for MCP clients like Claude
+router.post('/register', (req, res, next) => {
+  const ct = req.headers['content-type'] || '';
+  if (!ct.includes('application/json')) return next();
+  const { client_name, redirect_uris, grant_types, response_types, token_endpoint_auth_method } = req.body;
+  const clientId = uuidv4();
+  const clientSecret = uuidv4();
+  return res.status(201).json({
+    client_id: clientId,
+    client_secret: clientSecret,
+    client_name: client_name || 'MCP Client',
+    redirect_uris: redirect_uris || [],
+    grant_types: grant_types || ['authorization_code'],
+    response_types: response_types || ['code'],
+    token_endpoint_auth_method: token_endpoint_auth_method || 'client_secret_post'
+  });
+});
+
 router.post('/register', (req, res) => {
   const { email, name, redirect_uri, client_id, state } = req.body;
   if (!email || !name) {

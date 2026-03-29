@@ -75,7 +75,8 @@ app.get('/.well-known/oauth-authorization-server', (req, res) => {
     registration_endpoint: `${BASE_URL}/oauth/register`,
     response_types_supported: ['code'],
     grant_types_supported: ['authorization_code'],
-    token_endpoint_auth_methods_supported: ['none']
+    code_challenge_methods_supported: ['S256'],
+    token_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic', 'none']
   });
 });
 
